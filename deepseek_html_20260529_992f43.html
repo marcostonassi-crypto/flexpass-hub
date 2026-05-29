@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>FlexPass Hub™ - Academia sob demanda</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .login-container {
+            max-width: 420px;
+            width: 100%;
+            background: white;
+            border-radius: 2rem;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+        }
+        .login-header {
+            background: linear-gradient(135deg, #0b2b40 0%, #123e54 100%);
+            color: white;
+            padding: 2rem 1.5rem;
+            text-align: center;
+        }
+        .login-header h1 { font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .login-header .tagline { opacity: 0.9; font-size: 0.85rem; }
+        .login-badge {
+            background: rgba(255,255,255,0.2);
+            border-radius: 40px;
+            padding: 0.3rem 1rem;
+            display: inline-block;
+            margin-top: 1rem;
+            font-size: 0.7rem;
+        }
+        .login-body { padding: 2rem 1.5rem; }
+        .input-group {
+            margin-bottom: 1.2rem;
+            position: relative;
+        }
+        .input-group i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 0.9rem 1rem 0.9rem 2.8rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 1rem;
+            font-size: 0.95rem;
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: #ffb347;
+        }
+        .btn-login, .btn-demo {
+            width: 100%;
+            padding: 0.9rem;
+            border-radius: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 0.8rem;
+            border: none;
+        }
+        .btn-login {
+            background: linear-gradient(135deg, #ffb347, #ff8c00);
+            color: white;
+        }
+        .btn-demo {
+            background: transparent;
+            border: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .social-login { display: flex; gap: 1rem; margin-top: 1.5rem; }
+        .social-btn {
+            flex: 1;
+            padding: 0.7rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 1rem;
+            background: white;
+            cursor: pointer;
+        }
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            color: #94a3b8;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .divider span { margin: 0 1rem; }
+        .features {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+        }
+        .feature-item { text-align: center; font-size: 0.7rem; color: #64748b; }
+        .feature-item i { font-size: 1.2rem; color: #ffb347; display: block; margin-bottom: 0.3rem; }
+        
+        .app-container {
+            max-width: 500px;
+            width: 100%;
+            margin: 0 auto;
+            background: #ffffff;
+            min-height: 100vh;
+            display: none;
+        }
+        .header {
+            background: linear-gradient(135deg, #0b2b40 0%, #123e54 100%);
+            color: white;
+            padding: 1.2rem;
+        }
+        .logo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo h1 { font-size: 1.6rem; font-weight: 800; }
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 500px;
+            width: 100%;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 0.7rem 0.5rem 1rem;
+            border-top: 1px solid #e2e8f0;
+            z-index: 100;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            background: none;
+            border: none;
+            font-size: 0.7rem;
+            color: #7f8c8d;
+            cursor: pointer;
+            padding: 0.3rem 0.8rem;
+            border-radius: 2rem;
+        }
+        .nav-item i { font-size: 1.3rem; }
+        .nav-item.active { color: #ffb347; background: #fff8f0; }
+        .content-area { padding: 1rem 1rem 5rem 1rem; }
+        .card {
+            background: white;
+            border-radius: 1.2rem;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid #edf2f7;
+        }
+        .metric-large { font-size: 2rem; font-weight: 800; color: #0b2b40; }
+        .progress-bar {
+            background: #e2e8f0;
+            border-radius: 20px;
+            height: 12px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #ffb347, #ff8c00);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .btn {
+            background: #0b2b40;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 2rem;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+        }
+        .btn-primary { background: linear-gradient(135deg, #ffb347, #ff8c00); color: #1e2f3a; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .badge {
+            background: #f0f4f9;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        canvas { max-height: 200px; width: 100%; }
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e2f3a;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            z-index: 200;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        .gym-card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+        .gym-card:hover { background: #fff8f0; }
+    </style>
+</head>
+<body>
+    <!-- TELA DE LOGIN -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-header">
+            <h1>FlexPass Hub™</h1>
+            <div class="tagline">Sua academia, do seu jeito</div>
+            <div class="login-badge"><i class="fas fa-check-circle"></i> 500+ academias parceiras</div>
+        </div>
+        <div class="login-body">
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="loginEmail" placeholder="E-mail" value="aluno@flexpass.com">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="loginPassword" placeholder="Senha" value="123456">
+            </div>
+            <button class="btn-login" id="loginBtn"><i class="fas fa-arrow-right-to-bracket"></i> Entrar</button>
+            <button class="btn-demo" id="demoBtn"><i class="fas fa-play"></i> Modo Demonstração</button>
+            <div class="divider"><span>ou acesse com</span></div>
+            <div class="social-login">
+                <button class="social-btn" id="googleBtn"><i class="fab fa-google"></i> Google</button>
+                <button class="social-btn" id="facebookBtn"><i class="fab fa-facebook"></i> Facebook</button>
+            </div>
+            <div class="features">
+                <div class="feature-item"><i class="fas fa-dumbbell"></i><span>Academias de bairro</span></div>
+                <div class="feature-item"><i class="fas fa-chart-line"></i><span>Controle de uso</span></div>
+                <div class="feature-item"><i class="fas fa-building"></i><span>Benefício corporativo</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- APP PRINCIPAL -->
+    <div id="appContainer" class="app-container">
+        <div class="header">
+            <div class="logo">
+                <h1>FlexPass Hub™</h1>
+                <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Sair</button>
+            </div>
+            <div class="flex-between" style="margin-top: 12px;">
+                <div>
+                    <div id="userNameDisplay" style="font-weight:600">Carregando...</div>
+                    <div style="font-size:0.7rem; opacity:0.8">Ciclo 30 dias</div>
+                </div>
+                <div class="badge" style="background:rgba(255,255,255,0.2)" id="planBadge">Pro 12x</div>
+            </div>
+        </div>
+        <div class="content-area" id="contentArea"></div>
+        <div class="bottom-nav">
+            <button class="nav-item active" data-page="dashboard"><i class="fas fa-home"></i><span>Início</span></button>
+            <button class="nav-item" data-page="checkin"><i class="fas fa-dumbbell"></i><span>Check-in</span></button>
+            <button class="nav-item" data-page="qrcode"><i class="fas fa-qrcode"></i><span>QR Code</span></button>
+            <button class="nav-item" data-page="admin"><i class="fas fa-chart-line"></i><span>Admin</span></button>
+        </div>
+    </div>
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // ========== DADOS DO APP ==========
+        let currentUser = {
+            id: "usr_" + Date.now(),
+            name: "Carlos Mendes",
+            email: "aluno@flexpass.com",
+            planId: "plan_pro",
+            checkins: [],
+            cycleStart: null,
+            cycleEnd: null
+        };
+
+        const PLANS = {
+            plan_start: { name: "Start", limit: 8, price: 99 },
+            plan_pro: { name: "Pro", limit: 12, price: 139 },
+            plan_elite: { name: "Elite", limit: 16, price: 159 }
+        };
+
+        const GYMS = [
+            { id: 1, name: "Fit Bairro - Centro", address: "Av. Paulista, 1000" },
+            { id: 2, name: "Power Gym - Norte", address: "Rua Augusta, 500" },
+            { id: 3, name: "Wellness Club - Sul", address: "Alameda Santos, 200" },
+            { id: 4, name: "Strong Academy - Leste", address: "Rua da Consolação, 800" },
+            { id: 5, name: "Flex Studio - Oeste", address: "Rua Haddock Lobo, 300" }
+        ];
+
+        let adminMetrics = {
+            totalUsers: 347,
+            totalRevenue: 51700,
+            totalProfit: 18900,
+            avgUsage: 7.8,
+            b2bCompanies: 12,
+            b2bUsers: 198
+        };
+
+        let gymRanking = {
+            "Fit Bairro - Centro": 1240,
+            "Power Gym - Norte": 980,
+            "Wellness Club - Sul": 750,
+            "Strong Academy - Leste": 520,
+            "Flex Studio - Oeste": 310
+        };
+
+        let charts = {};
+        let currentPage = "dashboard";
+
+        // ========== FUNÇÕES DE UTILIDADE ==========
+        function showToast(msg) {
+            const toast = document.getElementById("toast");
+            toast.innerText = msg;
+            toast.style.opacity = "1";
+            setTimeout(() => toast.style.opacity = "0", 2500);
+        }
+
+        function saveToLocal() {
+            localStorage.setItem("flexpass_data", JSON.stringify({ 
+                user: currentUser, 
+                gymRanking, 
+                adminMetrics 
+            }));
+        }
+
+        function loadFromLocal() {
+            const data = localStorage.getItem("flexpass_data");
+            if(data) {
+                try {
+                    const parsed = JSON.parse(data);
+                    currentUser = parsed.user;
+                    gymRanking = parsed.gymRanking || gymRanking;
+                    adminMetrics = parsed.adminMetrics || adminMetrics;
+                } catch(e) {}
+            }
+            initUserCycle();
+        }
+
+        function initUserCycle() {
+            const now = new Date();
+            if (!currentUser.cycleStart || new Date(currentUser.cycleEnd) < now) {
+                currentUser.cycleStart = new Date(now).toISOString();
+                currentUser.cycleEnd = new Date(now.setDate(now.getDate() + 30)).toISOString();
+                currentUser.checkins = [];
+            }
+            const start = new Date(currentUser.cycleStart);
+            const end = new Date(currentUser.cycleEnd);
+            currentUser.checkins = currentUser.checkins.filter(c => {
+                const d = new Date(c.date);
+                return d >= start && d <= end;
+            });
+            saveToLocal();
+        }
+
+        function getCurrentCheckins() {
+            const start = new Date(currentUser.cycleStart);
+            const end = new Date(currentUser.cycleEnd);
+            return currentUser.checkins.filter(c => {
+                const d = new Date(c.date);
+                return d >= start && d <= end;
+            });
+        }
+
+        function getRemainingCheckins() {
+            const plan = PLANS[currentUser.planId];
+            return Math.max(0, plan.limit - getCurrentCheckins().length);
+        }
+
+        function canCheckinToday() {
+            const todayStr = new Date().toDateString();
+            return !getCurrentCheckins().some(c => new Date(c.date).toDateString() === todayStr);
+        }
+
+        function performCheckin(gym) {
+            if (!canCheckinToday()) {
+                showToast("❌ Você já fez check-in hoje!");
+                return false;
+            }
+            if (getRemainingCheckins() <= 0) {
+                showToast(`⚠️ Limite de ${PLANS[currentUser.planId].limit} acessos atingido.`);
+                return false;
+            }
+            
+            const newCheckin = {
+                id: Date.now(),
+                date: new Date().toISOString(),
+                gym: gym.name,
+                gymId: gym.id
+            };
+            currentUser.checkins.push(newCheckin);
+            gymRanking[gym.name] = (gymRanking[gym.name] || 0) + 1;
+            saveToLocal();
+            showToast(`✅ Check-in realizado em ${gym.name}!`);
+            renderCurrentPage();
+            return true;
+        }
+
+        // ========== RENDERIZAÇÃO ==========
+        function renderCharts() {
+            const ctx1 = document.getElementById("usageChart");
+            const ctx2 = document.getElementById("revenueChart");
+            if (!ctx1 || !ctx2) return;
+            
+            const checkins = getCurrentCheckins();
+            const daysOfMonth = Array.from({ length: 30 }, (_, i) => i + 1);
+            const checkinsPerDay = daysOfMonth.map(day => 
+                checkins.filter(c => new Date(c.date).getDate() === day).length
+            );
+            
+            if (charts.usage) charts.usage.destroy();
+            if (charts.revenue) charts.revenue.destroy();
+            
+            charts.usage = new Chart(ctx1, { 
+                type: 'line', 
+                data: { 
+                    labels: daysOfMonth, 
+                    datasets: [{ 
+                        label: 'Check-ins', 
+                        data: checkinsPerDay, 
+                        borderColor: '#ffb347', 
+                        backgroundColor: 'rgba(255,180,71,0.1)',
+                        fill: true, 
+                        tension: 0.3 
+                    }] 
+                },
+                options: { responsive: true }
+            });
+            
+            charts.revenue = new Chart(ctx2, { 
+                type: 'doughnut', 
+                data: { 
+                    labels: ['Leves 30%', 'Moderados 50%', 'Intensos 20%'], 
+                    datasets: [{ 
+                        data: [30, 50, 20], 
+                        backgroundColor: ['#2ecc71', '#3498db', '#e74c3c'] 
+                    }] 
+                } 
+            });
+        }
+
+        function renderDashboard() {
+            const plan = PLANS[currentUser.planId];
+            const used = getCurrentCheckins().length;
+            const percent = (used / plan.limit) * 100;
+            const cycleEnd = new Date(currentUser.cycleEnd);
+            const remainingDays = Math.ceil((cycleEnd - new Date()) / (1000 * 60 * 60 * 24));
+            
+            return `<div class="card">
+                <div class="flex-between">
+                    <span><i class="fas fa-chart-line"></i> Progresso do Ciclo</span>
+                    <span class="badge">${remainingDays} dias restantes</span>
+                </div>
+                <div class="metric-large">${used}/${plan.limit}</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width:${percent}%"></div>
+                </div>
+                <div class="flex-between" style="margin-top:12px">
+                    <span>Plano ${plan.name}</span>
+                    <span>R$ ${plan.price}/mês</span>
+                </div>
+            </div>
+            <div class="card">
+                <canvas id="usageChart"></canvas>
+            </div>
+            <div class="card">
+                <h3>🏆 Top Academias</h3>
+                ${Object.entries(gymRanking).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([gym,count]) => `
+                    <div class="flex-between" style="margin-top:8px">
+                        <span>${gym}</span>
+                        <strong>${count} check-ins</strong>
+                    </div>
+                `).join('')}
+            </div>
+            <div class="card">
+                <p style="font-size:0.75rem;font-style:italic">
+                    💡 "A FlexPass Hub não vende acesso. Ela entrega atenção, experiência e resultado."
+                </p>
+            </div>`;
+        }
+
+        function renderCheckinPage() {
+            const remaining = getRemainingCheckins();
+            const checkins = getCurrentCheckins();
+            const todayCheckin = !canCheckinToday();
+            
+            return `<div class="card" style="text-align:center">
+                <i class="fas fa-dumbbell" style="font-size:3rem;color:#ffb347"></i>
+                <h3 style="margin:10px 0">Check-in na Academia</h3>
+                <p><strong>Check-ins disponíveis: ${remaining}</strong></p>
+                ${todayCheckin ? '<p style="color:#e74c3c">⚠️ Você já fez check-in hoje</p>' : ''}
+                <div style="margin-top:15px">
+                    ${GYMS.map(gym => `
+                        <div class="gym-card" onclick="window.checkinFromCard(${gym.id})">
+                            <div class="flex-between">
+                                <span><i class="fas fa-building"></i> ${gym.name}</span>
+                                <span class="badge"><i class="fas fa-location-dot"></i> ${gym.address.split(',')[0]}</span>
+                            </div>
+                            <small>${gym.address}</small>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+            <div class="card">
+                <div class="flex-between">
+                    <span><i class="fas fa-list"></i> Últimos Check-ins</span>
+                    <span class="badge">Ciclo atual</span>
+                </div>
+                ${checkins.length === 0 ? 
+                    '<p style="text-align:center;color:#aaa;margin-top:10px">Nenhum check-in registrado</p>' : 
+                    checkins.slice(-5).reverse().map(c => `
+                        <div class="flex-between" style="margin-top:8px">
+                            <span><i class="fas fa-check-circle" style="color:#2ecc71"></i> ${new Date(c.date).toLocaleDateString()}</span>
+                            <span>${c.gym}</span>
+                        </div>
+                    `).join('')
+                }
+            </div>`;
+        }
+
+        function renderQRPage() {
+            const qrData = JSON.stringify({
+                userId: currentUser.id,
+                name: currentUser.name,
+                plan: PLANS[currentUser.planId].name,
+                email: currentUser.email,
+                timestamp: new Date().toISOString()
+            });
+            const qrBase64 = btoa(qrData).substring(0, 100);
+            
+            return `<div class="card" style="text-align:center">
+                <i class="fas fa-qrcode" style="font-size:3rem;color:#ffb347"></i>
+                <h3 style="margin:10px 0">Seu QR Code de Acesso</h3>
+                <div style="background:#f0f4f9;padding:20px;margin:15px 0;border-radius:16px">
+                    <div style="font-size:3rem">📱 🔲</div>
+                    <code style="font-size:0.65rem;word-break:break-all">${qrBase64}...</code>
+                </div>
+                <p style="font-size:0.8rem">Apresente este código na recepção da academia</p>
+                <button class="btn" id="refreshQRBtn" style="margin-top:15px">
+                    <i class="fas fa-sync-alt"></i> Atualizar QR Code
+                </button>
+                <p style="font-size:0.7rem;margin-top:10px">Válido para o plano ${PLANS[currentUser.planId].name}</p>
+            </div>
+            <div class="card">
+                <div class="flex-between">
+                    <span><i class="fas fa-bell"></i> Notificações</span>
+                    <button class="badge" id="notifBtn">Ativar Lembretes</button>
+                </div>
+                <p style="font-size:0.75rem;margin-top:8px">Receba lembretes para não perder seus treinos!</p>
+            </div>`;
+        }
+
+        function renderAdminPage() {
+            return `<div class="card">
+                <h3><i class="fas fa-chart-simple"></i> Métricas do Negócio</h3>
+                <div class="flex-between" style="margin-top:10px">
+                    <span>👥 Total de Usuários</span>
+                    <strong>${adminMetrics.totalUsers}</strong>
+                </div>
+                <div class="flex-between">
+                    <span>💰 Receita Total</span>
+                    <strong>R$ ${adminMetrics.totalRevenue.toLocaleString()}</strong>
+                </div>
+                <div class="flex-between">
+                    <span>📈 Lucro Estimado</span>
+                    <strong>R$ ${adminMetrics.totalProfit.toLocaleString()}</strong>
+                </div>
+                <div class="flex-between">
+                    <span>🏢 Empresas B2B</span>
+                    <strong>${adminMetrics.b2bCompanies}</strong>
+                </div>
+                <div class="flex-between">
+                    <span>👔 Usuários Corporativos</span>
+                    <strong>${adminMetrics.b2bUsers} (${Math.round((adminMetrics.b2bUsers/adminMetrics.totalUsers)*100)}%)</strong>
+                </div>
+            </div>
+            <div class="card">
+                <canvas id="revenueChart"></canvas>
+                <div style="margin-top:12px;font-size:0.7rem">
+                    <div class="flex-between">
+                        <span>✅ Leves (30%)</span>
+                        <span>Lucro R$70 por usuário</span>
+                    </div>
+                    <div class="flex-between">
+                        <span>⚖️ Moderados (50%)</span>
+                        <span>Lucro R$50 por usuário</span>
+                    </div>
+                    <div class="flex-between">
+                        <span>⚠️ Intensos (20%)</span>
+                        <span>Lucro R$10 por usuário</span>
+                    </div>
+                </div>
+                <div class="badge" style="background:#fff3e0;margin-top:12px;display:block;text-align:center">
+                    🎯 Ponto de equilíbrio: 40-60 usuários ativos
+                </div>
+            </div>
+            <div class="card">
+                <h4><i class="fas fa-chart-line"></i> Projeções Financeiras</h4>
+                <div style="margin-top:10px">
+                    <div class="flex-between"><span>50 usuários</span><span>R$7.450 receita | R$2.400 lucro</span></div>
+                    <div class="flex-between"><span>100 usuários</span><span>R$14.900 receita | R$4.800 lucro</span></div>
+                    <div class="flex-between"><span>300 usuários</span><span>R$44.700 receita | R$14.000 lucro</span></div>
+                    <div class="flex-between"><span>500 usuários</span><span>R$74.500 receita | R$24.000 lucro</span></div>
+                </div>
+                <p style="margin-top:12px;font-size:0.7rem;font-style:italic;color:#64748b">
+                    "Esse modelo já é validado globalmente. O diferencial aqui é fazer melhor, mais próximo e com mais controle."
+                </p>
+            </div>`;
+        }
+
+        function renderCurrentPage() {
+            const contentDiv = document.getElementById("contentArea");
+            let html = "";
+            switch(currentPage) {
+                case "dashboard": html = renderDashboard(); break;
+                case "checkin": html = renderCheckinPage(); break;
+                case "qrcode": html = renderQRPage(); break;
+                case "admin": html = renderAdminPage(); break;
+                default: html = renderDashboard(); break;
+            }
+            contentDiv.innerHTML = html;
+            
+            setTimeout(() => {
+                if (currentPage === "dashboard" || currentPage === "admin") renderCharts();
+                if (currentPage === "qrcode") {
+                    document.getElementById("refreshQRBtn")?.addEventListener("click", () => {
+                        showToast("QR Code atualizado!");
+                        renderCurrentPage();
+                    });
+                    document.getElementById("notifBtn")?.addEventListener("click", () => {
+                        if ("Notification" in window) {
+                            Notification.requestPermission();
+                            showToast("Notificações ativadas!");
+                        }
+                    });
+                }
+            }, 100);
+            
+            updateNavActive();
+        }
+
+        function updateNavActive() {
+            document.querySelectorAll(".nav-item").forEach(btn => {
+                btn.classList.remove("active");
+                if(btn.getAttribute("data-page") === currentPage) {
+                    btn.classList.add("active");
+                }
+            });
+            const plan = PLANS[currentUser.planId];
+            document.getElementById("planBadge").innerHTML = `${plan.name} ${plan.limit}x`;
+            document.getElementById("userNameDisplay").innerHTML = currentUser.name;
+        }
+
+        // ========== FUNÇÕES DE LOGIN ==========
+        function doLogin() {
+            const email = document.getElementById("loginEmail").value;
+            const password = document.getElementById("loginPassword").value;
+            if(email && password) {
+                currentUser.name = email.split('@')[0];
+                currentUser.email = email;
+                saveToLocal();
+                document.getElementById("loginScreen").style.display = "none";
+                document.getElementById("appContainer").style.display = "block";
+                showToast(`👋 Bem-vindo, ${currentUser.name}!`);
+                renderCurrentPage();
+            } else {
+                showToast("Preencha e-mail e senha");
+            }
+        }
+
+        function doDemoLogin() {
+            currentUser = {
+                id: "demo_" + Date.now(),
+                name: "Visitante Demo",
+                email: "demo@flexpass.com",
+                planId: "plan_pro",
+                checkins: [
+                    { id: 1, date: new Date(Date.now() - 86400000).toISOString(), gym: "Fit Bairro - Centro", gymId: 1 },
+                    { id: 2, date: new Date(Date.now() - 172800000).toISOString(), gym: "Power Gym - Norte", gymId: 2 },
+                    { id: 3, date: new Date(Date.now() - 259200000).toISOString(), gym: "Wellness Club - Sul", gymId: 3 }
+                ],
+                cycleStart: new Date().toISOString(),
+                cycleEnd: new Date(new Date().setDate(new Date().getDate() + 30)).toISOString()
+            };
+            saveToLocal();
+            document.getElementById("loginScreen").style.display = "none";
+            document.getElementById("appContainer").style.display = "block";
+            showToast("🎉 Modo demonstração ativado!");
+            renderCurrentPage();
+        }
+
+        function doLogout() {
+            document.getElementById("loginScreen").style.display = "block";
+            document.getElementById("appContainer").style.display = "none";
+            showToast("👋 Até logo!");
+        }
+
+        // ========== FUNÇÕES GLOBAIS ==========
+        window.checkinFromCard = (gymId) => {
+            const gym = GYMS.find(g => g.id === gymId);
+            if(gym) performCheckin(gym);
+        };
+
+        // ========== EVENTOS ==========
+        document.getElementById("loginBtn")?.addEventListener("click", doLogin);
+        document.getElementById("demoBtn")?.addEventListener("click", doDemoLogin);
+        document.getElementById("googleBtn")?.addEventListener("click", () => doDemoLogin());
+        document.getElementById("facebookBtn")?.addEventListener("click", () => doDemoLogin());
+        document.getElementById("logoutBtn")?.addEventListener("click", doLogout);
+        
+        document.querySelectorAll(".nav-item").forEach(btn => {
+            btn.addEventListener("click", () => {
+                currentPage = btn.getAttribute("data-page");
+                renderCurrentPage();
+            });
+        });
+
+        // ========== INICIALIZAÇÃO ==========
+        loadFromLocal();
+    </script>
+</body>
+</html>
